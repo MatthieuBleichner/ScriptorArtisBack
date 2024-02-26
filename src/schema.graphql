@@ -1,0 +1,32 @@
+type Query {
+  "List of all Tasks of this project."
+  featuredTasks: [Tasks!]!
+}
+
+"Define a story to be done"
+type Task {
+    "The id of the task"
+    id: ID!
+    "The title of the task"
+    title: String!
+    "The description of the task"
+    description: String
+    "The state of the task - ToDo, OnGoing, Done"
+    state: String!
+    "Who is the owner of this task"
+    owner: User
+}
+
+
+type User {
+    "The id of the user"
+    id: ID!
+    "The name of the user"
+    firstName: String!
+    "The last name of the user"
+    lastName: String!
+    "The email of the user"
+    email: String!
+    "List of tasks handled by this user"
+    tasks: [Task]
+}
