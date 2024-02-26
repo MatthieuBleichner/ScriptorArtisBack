@@ -1,6 +1,6 @@
 type Query {
   "List of all Tasks of this project."
-  featuredTasks: [Tasks!]!
+  featuredTasks: [Task!]!
 }
 
 "Define a story to be done"
@@ -27,6 +27,6 @@ type User {
     lastName: String!
     "The email of the user"
     email: String!
-    "List of tasks handled by this user"
-    tasks: [Task]
+    "List of tasks ids' handled by this user"
+    tasks: [String]
 }
