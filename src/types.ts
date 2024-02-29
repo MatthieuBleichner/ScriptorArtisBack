@@ -7,6 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -16,10 +17,49 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  /** Create a new task */
+  createTask: Task;
+  /** Delete a task */
+  deleteTask: Task;
+  /** Update a task */
+  updateTask: Task;
+};
+
+
+export type MutationCreateTaskArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  owner: Scalars['Int']['input'];
+  state: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteTaskArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateTaskArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  owner?: InputMaybe<Scalars['Int']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   /** List of all Tasks of this project. */
   featuredTasks: Array<Task>;
+  /** Retrieves a specific playlist. */
+  task?: Maybe<Task>;
+};
+
+
+export type QueryTaskArgs = {
+  id: Scalars['Int']['input'];
 };
 
 /** Define a story to be done */
@@ -28,7 +68,7 @@ export type Task = {
   /** The description of the task */
   description?: Maybe<Scalars['String']['output']>;
   /** The id of the task */
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
   /** Who is the owner of this task */
   owner?: Maybe<User>;
   /** The state of the task - ToDo, OnGoing, Done */
@@ -44,7 +84,7 @@ export type User = {
   /** The name of the user */
   firstName: Scalars['String']['output'];
   /** The id of the user */
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
   /** The last name of the user */
   lastName: Scalars['String']['output'];
   /** List of tasks ids' handled by this user */
@@ -123,7 +163,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Task: ResolverTypeWrapper<Task>;
@@ -133,20 +174,28 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
-  ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
+  Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
   Task: Task;
   User: User;
 };
 
+export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'owner' | 'state' | 'title'>>;
+  deleteTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'id'>>;
+};
+
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   featuredTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
 };
 
 export type TaskResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   state?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -156,13 +205,14 @@ export type TaskResolvers<ContextType = DataSourceContext, ParentType extends Re
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = DataSourceContext> = {
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

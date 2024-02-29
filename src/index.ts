@@ -17,10 +17,9 @@ const typeDefs = gql(
     const server = new ApolloServer({ typeDefs, resolvers });
     const { url } = await startStandaloneServer(server, {
       context: async () => {
-        const { cache } = server;
         return {
           dataSources: {
-            prismaAPI: new PrismaAPI({ cache }),
+            prismaAPI: new PrismaAPI(),
           },
         };
       },

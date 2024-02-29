@@ -5,6 +5,9 @@ export const resolvers: Resolvers = {
         featuredTasks: (_, __, { dataSources }) => {
             return dataSources.prismaAPI.getFeaturedTasks();
         },
+        task: (_, { id }, { dataSources }) => {
+            return dataSources.prismaAPI.getTask(id);
+        },
     },
   };
 

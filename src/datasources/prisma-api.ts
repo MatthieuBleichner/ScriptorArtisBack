@@ -1,30 +1,18 @@
-import { RESTDataSource } from "@apollo/datasource-rest";
 import { Task, User } from "../types";
+import { PrismaClient } from '@prisma/client'
 
 
-const ME: User = {
-    id: 'me',
-    firstName: 'Matthieu',
-    lastName: 'Bleichner',
-    email: '',
-    tasks: ['firstTask']
-}
 
-
-const FIRST_TASK: Task = {
-    id: 'firstTask',
-    title: 'First task',
-    description: 'My first task',
-    state: 'To  do',
-    owner: ME
-} 
-export class PrismaAPI extends RESTDataSource {
-    baseURL = "https://spotify-demo-api-fe224840a08c.herokuapp.com/v1/";
+export class PrismaAPI extends PrismaClient {
 
     async getFeaturedTasks(): Promise<Task[]> {
-        //const response = await this.get<{ playlists: { items: any[] }}>("browse/featured-playlists");
-        //return response?.playlists?.items ?? [];
-        return [FIRST_TASK];
-      }
-        
+        const response = await this.task.findMany();
+        return response;
+    }
+    
+    async getTask(taskId: number): Promise<Task> {
+      return this.task.findUnique({
+        where: { id: taskId || undefined },
+      })
+    }
 }
