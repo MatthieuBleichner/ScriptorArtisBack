@@ -5,6 +5,16 @@ type Query {
   task(id: Int!): Task
 }
 
+type Mutation {
+  "Create a new task"
+  createTask(input: createTaskInput): Task!
+  "Update a task"
+  updateTask(input: updateTaskInput): Task!
+  "Delete a task"
+  deleteTask(input: deleteTaskInput): Task!
+
+}
+
 "Define a story to be done"
 type Task {
     "The id of the task"
@@ -31,4 +41,23 @@ type User {
     email: String!
     "List of tasks ids' handled by this user"
     tasks: [String]
+}
+
+input createTaskInput {
+  title: String!
+  description: String
+  state: String
+  ownerId: Int
+}
+
+input updateTaskInput {
+  id: Int!
+  title: String
+  description: String
+  state: String
+  ownerId: Int
+}
+
+input deleteTaskInput {
+  id: Int!
 }

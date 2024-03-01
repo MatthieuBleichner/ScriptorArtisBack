@@ -9,5 +9,16 @@ export const resolvers: Resolvers = {
             return dataSources.prismaAPI.getTask(id);
         },
     },
+    Mutation: { 
+        createTask: (_, { input }, { dataSources }) => {
+            return dataSources.prismaAPI.createTask(input);
+        },
+        deleteTask: (_, { input }, { dataSources }) => {
+            return dataSources.prismaAPI.deleteTask(input.id);
+        },
+        updateTask: (_, { input }, { dataSources }) => {
+            return dataSources.prismaAPI.updateTask(input);
+        },
+    }
   };
 

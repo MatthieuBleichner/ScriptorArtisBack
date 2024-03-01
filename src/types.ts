@@ -29,24 +29,17 @@ export type Mutation = {
 
 
 export type MutationCreateTaskArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  owner: Scalars['Int']['input'];
-  state: Scalars['String']['input'];
-  title: Scalars['String']['input'];
+  input?: InputMaybe<CreateTaskInput>;
 };
 
 
 export type MutationDeleteTaskArgs = {
-  id: Scalars['Int']['input'];
+  input?: InputMaybe<DeleteTaskInput>;
 };
 
 
 export type MutationUpdateTaskArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
-  owner?: InputMaybe<Scalars['Int']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  input?: InputMaybe<UpdateTaskInput>;
 };
 
 export type Query = {
@@ -89,6 +82,25 @@ export type User = {
   lastName: Scalars['String']['output'];
   /** List of tasks ids' handled by this user */
   tasks?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type CreateTaskInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  ownerId?: InputMaybe<Scalars['Int']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
+export type DeleteTaskInput = {
+  id: Scalars['Int']['input'];
+};
+
+export type UpdateTaskInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  ownerId?: InputMaybe<Scalars['Int']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -169,6 +181,9 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Task: ResolverTypeWrapper<Task>;
   User: ResolverTypeWrapper<User>;
+  createTaskInput: CreateTaskInput;
+  deleteTaskInput: DeleteTaskInput;
+  updateTaskInput: UpdateTaskInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -180,12 +195,15 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   Task: Task;
   User: User;
+  createTaskInput: CreateTaskInput;
+  deleteTaskInput: DeleteTaskInput;
+  updateTaskInput: UpdateTaskInput;
 };
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'owner' | 'state' | 'title'>>;
-  deleteTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
-  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'id'>>;
+  createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationCreateTaskArgs>>;
+  deleteTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationDeleteTaskArgs>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationUpdateTaskArgs>>;
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
