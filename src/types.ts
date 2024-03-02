@@ -46,13 +46,35 @@ export type Query = {
   __typename?: 'Query';
   /** List of all Tasks of this project. */
   featuredTasks: Array<Task>;
+  /** List of all states of this project. */
+  states?: Maybe<Array<State>>;
   /** Retrieves a specific playlist. */
   task?: Maybe<Task>;
+  /** List of tasks associated to a state */
+  tasksByState?: Maybe<Array<Maybe<Task>>>;
 };
 
 
 export type QueryTaskArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type QueryTasksByStateArgs = {
+  id: Scalars['Int']['input'];
+};
+
+/** Define the status of a story to be done */
+export type State = {
+  __typename?: 'State';
+  /** The id of the status */
+  id: Scalars['Int']['output'];
+  /** The position of the status */
+  index: Scalars['Int']['output'];
+  /** The tasks associated to this status */
+  tasks?: Maybe<Array<Maybe<Task>>>;
+  /** The name of the status */
+  title: Scalars['String']['output'];
 };
 
 /** Define a story to be done */
@@ -65,7 +87,7 @@ export type Task = {
   /** Who is the owner of this task */
   owner?: Maybe<User>;
   /** The state of the task - ToDo, OnGoing, Done */
-  state: Scalars['String']['output'];
+  state: Scalars['Int']['output'];
   /** The title of the task */
   title: Scalars['String']['output'];
 };
@@ -87,7 +109,7 @@ export type User = {
 export type CreateTaskInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   ownerId?: InputMaybe<Scalars['Int']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['Int']['input']>;
   title: Scalars['String']['input'];
 };
 
@@ -99,7 +121,7 @@ export type UpdateTaskInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
   ownerId?: InputMaybe<Scalars['Int']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['Int']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -178,6 +200,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  State: ResolverTypeWrapper<State>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Task: ResolverTypeWrapper<Task>;
   User: ResolverTypeWrapper<User>;
@@ -192,6 +215,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
+  State: State;
   String: Scalars['String']['output'];
   Task: Task;
   User: User;
@@ -208,14 +232,24 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   featuredTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  states?: Resolver<Maybe<Array<ResolversTypes['State']>>, ParentType, ContextType>;
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
+  tasksByState?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, RequireFields<QueryTasksByStateArgs, 'id'>>;
+};
+
+export type StateResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['State'] = ResolversParentTypes['State']> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TaskResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  state?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -232,6 +266,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 export type Resolvers<ContextType = DataSourceContext> = {
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  State?: StateResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };

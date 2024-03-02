@@ -1,4 +1,4 @@
-import { Task, User } from "../types";
+import { Task, State } from "../types";
 import { PrismaClient } from '@prisma/client'
 
 
@@ -17,12 +17,12 @@ export class PrismaAPI extends PrismaClient {
     }
 
 
-    async createTask(input : {title: string, description?: string, state?: string, ownerId?: number}): Promise<Task> {
+    async createTask(input : {title: string, description?: string, state?: number, ownerId?: number}): Promise<Task> {
       return this.task.create({
         data: {
           title: input.title,
           description: input.description,
-          state: input.state ?? 'ToDo',
+          state: input.state,
           ownerId: input.ownerId,
         },
       });
@@ -36,7 +36,7 @@ export class PrismaAPI extends PrismaClient {
       });
     }
 
-    async updateTask(input: {id: number, title?: string, description?: string, state?: string, ownerId?: number}): Promise<Task> {
+    async updateTask(input: {id: number, title?: string, description?: string, state?: number, ownerId?: number}): Promise<Task> {
       return this.task.update({
         where: {
           id: input.id,
@@ -49,4 +49,23 @@ export class PrismaAPI extends PrismaClient {
         },
       });
     }
+
+
+    async getStates(): Promise<State[]> {
+      const response = await this.state.findMany({
+        orderBy: {
+          index: 'asc'
+        }
+      });
+      return response;
+  }
+
+  async getTasksByState(stateId: number): Promise<Task[]> {
+    const response = await this.task.findMany({
+      where: {
+        state: stateId
+      }
+    });
+    return response;
+  }
 }

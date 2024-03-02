@@ -3,6 +3,10 @@ type Query {
   featuredTasks: [Task!]!
   "Retrieves a specific playlist."
   task(id: Int!): Task
+  "List of all states of this project."
+  states: [State!]
+  "List of tasks associated to a state"
+  tasksByState(id: Int!): [Task]
 }
 
 type Mutation {
@@ -15,6 +19,18 @@ type Mutation {
 
 }
 
+"Define the status of a story to be done"
+type State {
+    "The id of the status"
+    id: Int!
+    "The name of the status"
+    title: String!
+    "The position of the status"
+    index: Int!
+    "The tasks associated to this status"
+    tasks: [Task]
+}
+
 "Define a story to be done"
 type Task {
     "The id of the task"
@@ -24,7 +40,7 @@ type Task {
     "The description of the task"
     description: String
     "The state of the task - ToDo, OnGoing, Done"
-    state: String!
+    state: Int!
     "Who is the owner of this task"
     owner: User
 }
@@ -46,7 +62,7 @@ type User {
 input createTaskInput {
   title: String!
   description: String
-  state: String
+  state: Int
   ownerId: Int
 }
 
@@ -54,7 +70,7 @@ input updateTaskInput {
   id: Int!
   title: String
   description: String
-  state: String
+  state: Int
   ownerId: Int
 }
 

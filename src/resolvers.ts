@@ -8,6 +8,12 @@ export const resolvers: Resolvers = {
         task: (_, { id }, { dataSources }) => {
             return dataSources.prismaAPI.getTask(id);
         },
+        states: (_, __, { dataSources }) => {
+            return dataSources.prismaAPI.getStates();
+        },
+        tasksByState: (_, { id }, { dataSources }) => {
+            return dataSources.prismaAPI.getTasksByState(id);
+        }
     },
     Mutation: { 
         createTask: (_, { input }, { dataSources }) => {
