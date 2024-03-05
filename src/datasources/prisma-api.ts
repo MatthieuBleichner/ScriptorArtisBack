@@ -5,8 +5,10 @@ import { PrismaClient } from '@prisma/client'
 
 export class PrismaAPI extends PrismaClient {
 
-    async getFeaturedTasks(): Promise<Task[]> {
-        const response = await this.task.findMany();
+    async getFeaturedTasks(filters: {state?: number, priority?: string, date?: string, ownerId?: number}): Promise<Task[]> {
+        const response = await this.task.findMany({
+          where: { state: filters.state, priority: filters.priority, date: filters.date, ownerId: filters.ownerId}
+        });
         return response;
     }
     
@@ -17,13 +19,15 @@ export class PrismaAPI extends PrismaClient {
     }
 
 
-    async createTask(input : {title: string, description?: string, state?: number, ownerId?: number}): Promise<Task> {
+    async createTask(input : {title: string, description?: string, state?: number, ownerId?: number, priority?: string, date?: string}): Promise<Task> {
       return this.task.create({
         data: {
           title: input.title,
           description: input.description,
           state: input.state,
           ownerId: input.ownerId,
+          priority: input.priority,
+          date: input.date,
         },
       });
     }
@@ -36,7 +40,7 @@ export class PrismaAPI extends PrismaClient {
       });
     }
 
-    async updateTask(input: {id: number, title?: string, description?: string, state?: number, ownerId?: number}): Promise<Task> {
+    async updateTask(input: {id: number, title?: string, description?: string, state?: number, ownerId?: number, priority?: string, date?: string}): Promise<Task> {
       return this.task.update({
         where: {
           id: input.id,
@@ -46,6 +50,8 @@ export class PrismaAPI extends PrismaClient {
           description: input.description /*?? input.task.description*/,
           state: input.state /*?? input.task.state*/,
           ownerId: input.ownerId /*?? input.task.owner?.id*/,
+          priority: input.priority,
+          date: input.date,
         },
       });
     }
@@ -60,10 +66,15 @@ export class PrismaAPI extends PrismaClient {
       return response;
   }
 
-  async getTasksByState(stateId: number): Promise<Task[]> {
+  async getTasksByState(filters: {stateId: number, priority?: string, date?: string, ownerId?: number, description?: string, title?: string}): Promise<Task[]> {
     const response = await this.task.findMany({
       where: {
-        state: stateId
+        state: filters.stateId,
+        priority: filters.priority, 
+        date: filters.date, 
+        ownerId: filters.ownerId,
+        title: { contains: filters.title},
+        description: { contains: filters.description}
       }
     });
     return response;

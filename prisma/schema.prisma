@@ -21,6 +21,8 @@ model Task {
   description String?
   state       Int
   ownerId     Int?
+  priority    String
+  date        String?
 }
 
 

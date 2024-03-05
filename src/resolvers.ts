@@ -2,8 +2,8 @@ import { Resolvers } from "./types";
 
 export const resolvers: Resolvers = {
     Query: {
-        featuredTasks: (_, __, { dataSources }) => {
-            return dataSources.prismaAPI.getFeaturedTasks();
+        featuredTasks: (_, { filter }, { dataSources }) => {
+            return dataSources.prismaAPI.getFeaturedTasks( filter );
         },
         task: (_, { id }, { dataSources }) => {
             return dataSources.prismaAPI.getTask(id);
@@ -11,8 +11,8 @@ export const resolvers: Resolvers = {
         states: (_, __, { dataSources }) => {
             return dataSources.prismaAPI.getStates();
         },
-        tasksByState: (_, { id }, { dataSources }) => {
-            return dataSources.prismaAPI.getTasksByState(id);
+        tasksByState: (_, { filters }, { dataSources }) => {
+            return dataSources.prismaAPI.getTasksByState(filters);
         }
     },
     Mutation: { 

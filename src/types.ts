@@ -42,6 +42,14 @@ export type MutationUpdateTaskArgs = {
   input?: InputMaybe<UpdateTaskInput>;
 };
 
+export enum Priority {
+  P0 = 'P0',
+  P1 = 'P1',
+  P2 = 'P2',
+  P3 = 'P3',
+  P4 = 'P4'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** List of all Tasks of this project. */
@@ -55,16 +63,21 @@ export type Query = {
 };
 
 
+export type QueryFeaturedTasksArgs = {
+  filter?: InputMaybe<TaskFilters>;
+};
+
+
 export type QueryTaskArgs = {
   id: Scalars['Int']['input'];
 };
 
 
 export type QueryTasksByStateArgs = {
-  id: Scalars['Int']['input'];
+  filters?: InputMaybe<TaskFiltersByState>;
 };
 
-/** Define the status of a story to be done */
+/** Define the status of a story to be done Todo, In Progress, Done */
 export type State = {
   __typename?: 'State';
   /** The id of the status */
@@ -80,16 +93,40 @@ export type State = {
 /** Define a story to be done */
 export type Task = {
   __typename?: 'Task';
+  /** Due date of this task */
+  date?: Maybe<Scalars['String']['output']>;
   /** The description of the task */
   description?: Maybe<Scalars['String']['output']>;
   /** The id of the task */
   id: Scalars['Int']['output'];
   /** Who is the owner of this task */
   owner?: Maybe<User>;
+  /** Priority of this task */
+  priority?: Maybe<Scalars['String']['output']>;
   /** The state of the task - ToDo, OnGoing, Done */
   state: Scalars['Int']['output'];
   /** The title of the task */
   title: Scalars['String']['output'];
+};
+
+export type TaskFilters = {
+  date?: InputMaybe<Scalars['String']['input']>;
+  ownerId?: InputMaybe<Scalars['Int']['input']>;
+  priority?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type TaskFiltersByState = {
+  date?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  ownerId?: InputMaybe<Scalars['Int']['input']>;
+  priority?: InputMaybe<Scalars['String']['input']>;
+  stateId: Scalars['Int']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TasksInput = {
+  filter?: InputMaybe<TaskFilters>;
 };
 
 export type User = {
@@ -107,8 +144,10 @@ export type User = {
 };
 
 export type CreateTaskInput = {
+  date?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   ownerId?: InputMaybe<Scalars['Int']['input']>;
+  priority?: InputMaybe<Priority>;
   state?: InputMaybe<Scalars['Int']['input']>;
   title: Scalars['String']['input'];
 };
@@ -118,9 +157,11 @@ export type DeleteTaskInput = {
 };
 
 export type UpdateTaskInput = {
+  date?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
   ownerId?: InputMaybe<Scalars['Int']['input']>;
+  priority?: InputMaybe<Priority>;
   state?: InputMaybe<Scalars['Int']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -199,10 +240,14 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
+  Priority: Priority;
   Query: ResolverTypeWrapper<{}>;
   State: ResolverTypeWrapper<State>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Task: ResolverTypeWrapper<Task>;
+  TaskFilters: TaskFilters;
+  TaskFiltersByState: TaskFiltersByState;
+  TasksInput: TasksInput;
   User: ResolverTypeWrapper<User>;
   createTaskInput: CreateTaskInput;
   deleteTaskInput: DeleteTaskInput;
@@ -218,6 +263,9 @@ export type ResolversParentTypes = {
   State: State;
   String: Scalars['String']['output'];
   Task: Task;
+  TaskFilters: TaskFilters;
+  TaskFiltersByState: TaskFiltersByState;
+  TasksInput: TasksInput;
   User: User;
   createTaskInput: CreateTaskInput;
   deleteTaskInput: DeleteTaskInput;
@@ -231,10 +279,10 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  featuredTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  featuredTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryFeaturedTasksArgs>>;
   states?: Resolver<Maybe<Array<ResolversTypes['State']>>, ParentType, ContextType>;
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
-  tasksByState?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, RequireFields<QueryTasksByStateArgs, 'id'>>;
+  tasksByState?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, Partial<QueryTasksByStateArgs>>;
 };
 
 export type StateResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['State'] = ResolversParentTypes['State']> = {
@@ -246,9 +294,11 @@ export type StateResolvers<ContextType = DataSourceContext, ParentType extends R
 };
 
 export type TaskResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
+  date?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  priority?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   state?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

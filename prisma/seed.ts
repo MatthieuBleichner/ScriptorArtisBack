@@ -8,6 +8,11 @@ const userData: Prisma.UserCreateInput[] = [
     lastName: 'Bleichner',
     email: 'matthieu258@hotmail.com',
   },
+  {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@gmail.com',
+  },
 ]
 
 
@@ -15,8 +20,26 @@ const taskData: Prisma.TaskCreateInput[] = [
   {
     title: 'My first Prisma task',
     description: 'Description of my first prisma task',
-    state: 0,
+    state: 1,
+    ownerId: 1,
+    priority: "P0",
+    date: null,
+  },
+  {
+    title: 'My second Prisma task',
+    description: 'Description of my second prisma task',
+    state: 2,
+    ownerId: 2,
+    priority: "P1",
+    date: null,
+  },
+  {
+    title: 'My third Prisma task',
+    description: 'Description of my third prisma task',
+    state: 3,
     ownerId: null,
+    priority: "P2",
+    date: null,
   },
 ]
 
