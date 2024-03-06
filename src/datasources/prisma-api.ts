@@ -87,6 +87,7 @@ export class PrismaAPI extends PrismaClient {
   }
 
   async getUser(userId: number): Promise<User> {
+    if (!userId) return null
     return this.user.findUnique({
       where: { id: userId || undefined },
     })
