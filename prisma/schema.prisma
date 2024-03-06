@@ -19,7 +19,7 @@ model Task {
   id          Int      @id @default(autoincrement())
   title       String
   description String?
-  state       Int
+  stateId       Int
   ownerId     Int?
   priority    String
   date        String?

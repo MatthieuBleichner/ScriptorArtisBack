@@ -49,8 +49,6 @@ type State {
     title: String!
     "The position of the status"
     index: Int!
-    "The tasks associated to this status"
-    tasks: [Task]
 }
 
 enum Priority {
@@ -70,7 +68,7 @@ type Task {
     "The description of the task"
     description: String
     "The state of the task - ToDo, OnGoing, Done"
-    state: Int!
+    state: State
     "Who is the owner of this task"
     owner: User 
     "Priority of this task"
@@ -89,8 +87,6 @@ type User {
     lastName: String!
     "The email of the user"
     email: String!
-    "List of tasks ids' handled by this user"
-    tasks: [String]
 }
 
 input createTaskInput {

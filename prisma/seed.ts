@@ -20,7 +20,7 @@ const taskData: Prisma.TaskCreateInput[] = [
   {
     title: 'My first Prisma task',
     description: 'Description of my first prisma task',
-    state: 1,
+    stateId: 1,
     ownerId: 1,
     priority: "P0",
     date: null,
@@ -28,7 +28,7 @@ const taskData: Prisma.TaskCreateInput[] = [
   {
     title: 'My second Prisma task',
     description: 'Description of my second prisma task',
-    state: 2,
+    stateId: 2,
     ownerId: 2,
     priority: "P1",
     date: null,
@@ -36,7 +36,7 @@ const taskData: Prisma.TaskCreateInput[] = [
   {
     title: 'My third Prisma task',
     description: 'Description of my third prisma task',
-    state: 3,
+    stateId: 3,
     ownerId: null,
     priority: "P2",
     date: null,

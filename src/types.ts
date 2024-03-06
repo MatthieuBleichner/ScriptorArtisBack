@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { TaksModel } from './models';
 import { DataSourceContext } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -84,8 +85,6 @@ export type State = {
   id: Scalars['Int']['output'];
   /** The position of the status */
   index: Scalars['Int']['output'];
-  /** The tasks associated to this status */
-  tasks?: Maybe<Array<Maybe<Task>>>;
   /** The name of the status */
   title: Scalars['String']['output'];
 };
@@ -104,7 +103,7 @@ export type Task = {
   /** Priority of this task */
   priority?: Maybe<Scalars['String']['output']>;
   /** The state of the task - ToDo, OnGoing, Done */
-  state: Scalars['Int']['output'];
+  state?: Maybe<State>;
   /** The title of the task */
   title: Scalars['String']['output'];
 };
@@ -139,8 +138,6 @@ export type User = {
   id: Scalars['Int']['output'];
   /** The last name of the user */
   lastName: Scalars['String']['output'];
-  /** List of tasks ids' handled by this user */
-  tasks?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export type CreateTaskInput = {
@@ -244,7 +241,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   State: ResolverTypeWrapper<State>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Task: ResolverTypeWrapper<Task>;
+  Task: ResolverTypeWrapper<TaksModel>;
   TaskFilters: TaskFilters;
   TaskFiltersByState: TaskFiltersByState;
   TasksInput: TasksInput;
@@ -262,7 +259,7 @@ export type ResolversParentTypes = {
   Query: {};
   State: State;
   String: Scalars['String']['output'];
-  Task: Task;
+  Task: TaksModel;
   TaskFilters: TaskFilters;
   TaskFiltersByState: TaskFiltersByState;
   TasksInput: TasksInput;
@@ -288,7 +285,6 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 export type StateResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['State'] = ResolversParentTypes['State']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -299,7 +295,7 @@ export type TaskResolvers<ContextType = DataSourceContext, ParentType extends Re
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   priority?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['State']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -309,7 +305,6 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

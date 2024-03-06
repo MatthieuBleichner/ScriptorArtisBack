@@ -15,6 +15,14 @@ export const resolvers: Resolvers = {
             return dataSources.prismaAPI.getTasksByState(filters);
         }
     },
+    Task: {
+        owner: (parent, _, { dataSources }) => {
+          return dataSources.prismaAPI.getUser(parent.ownerId)
+        },
+        state: (parent, _, { dataSources }) => {
+            return dataSources.prismaAPI.getSate(parent.stateId)
+        }
+      },
     Mutation: { 
         createTask: (_, { input }, { dataSources }) => {
             return dataSources.prismaAPI.createTask(input);

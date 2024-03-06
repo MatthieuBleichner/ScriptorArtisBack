@@ -1,13 +1,13 @@
-import { Task, State } from "../types";
+import { Task, State, User } from "../types";
 import { PrismaClient } from '@prisma/client'
 
 
 
 export class PrismaAPI extends PrismaClient {
 
-    async getFeaturedTasks(filters: {state?: number, priority?: string, date?: string, ownerId?: number}): Promise<Task[]> {
+    async getFeaturedTasks(filters: {stateId?: number, priority?: string, date?: string, ownerId?: number}): Promise<Task[]> {
         const response = await this.task.findMany({
-          where: { state: filters.state, priority: filters.priority, date: filters.date, ownerId: filters.ownerId}
+          where: { stateId: filters.stateId, priority: filters.priority, date: filters.date, ownerId: filters.ownerId}
         });
         return response;
     }
@@ -19,12 +19,12 @@ export class PrismaAPI extends PrismaClient {
     }
 
 
-    async createTask(input : {title: string, description?: string, state?: number, ownerId?: number, priority?: string, date?: string}): Promise<Task> {
+    async createTask(input : {title: string, description?: string, stateId?: number, ownerId?: number, priority?: string, date?: string}): Promise<Task> {
       return this.task.create({
         data: {
           title: input.title,
           description: input.description,
-          state: input.state,
+          stateId: input.stateId,
           ownerId: input.ownerId,
           priority: input.priority,
           date: input.date,
@@ -40,7 +40,7 @@ export class PrismaAPI extends PrismaClient {
       });
     }
 
-    async updateTask(input: {id: number, title?: string, description?: string, state?: number, ownerId?: number, priority?: string, date?: string}): Promise<Task> {
+    async updateTask(input: {id: number, title?: string, description?: string, stateId?: number, ownerId?: number, priority?: string, date?: string}): Promise<Task> {
       return this.task.update({
         where: {
           id: input.id,
@@ -48,7 +48,7 @@ export class PrismaAPI extends PrismaClient {
         data: {
           title: input.title /*|| input.task.title*/, // if given title is empty keep old one
           description: input.description /*?? input.task.description*/,
-          state: input.state /*?? input.task.state*/,
+          stateId: input.stateId /*?? input.task.state*/,
           ownerId: input.ownerId /*?? input.task.owner?.id*/,
           priority: input.priority,
           date: input.date,
@@ -57,7 +57,7 @@ export class PrismaAPI extends PrismaClient {
     }
 
 
-    async getStates(): Promise<State[]> {
+  async getStates(): Promise<State[]> {
       const response = await this.state.findMany({
         orderBy: {
           index: 'asc'
@@ -66,10 +66,16 @@ export class PrismaAPI extends PrismaClient {
       return response;
   }
 
+  async getSate(stateId: number): Promise<State> {
+    return this.state.findUnique({
+      where: { id: stateId || undefined },
+    })
+  }
+
   async getTasksByState(filters: {stateId: number, priority?: string, date?: string, ownerId?: number, description?: string, title?: string}): Promise<Task[]> {
     const response = await this.task.findMany({
       where: {
-        state: filters.stateId,
+        stateId: filters.stateId,
         priority: filters.priority, 
         date: filters.date, 
         ownerId: filters.ownerId,
@@ -78,5 +84,11 @@ export class PrismaAPI extends PrismaClient {
       }
     });
     return response;
+  }
+
+  async getUser(userId: number): Promise<User> {
+    return this.user.findUnique({
+      where: { id: userId || undefined },
+    })
   }
 }
