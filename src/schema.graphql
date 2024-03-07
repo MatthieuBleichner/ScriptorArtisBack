@@ -92,7 +92,7 @@ type User {
 input createTaskInput {
   title: String!
   description: String
-  state: Int
+  stateId: Int
   ownerId: Int
   priority: Priority
   date: String
@@ -102,7 +102,7 @@ input updateTaskInput {
   id: Int!
   title: String
   description: String
-  state: Int
+  stateId: Int
   ownerId: Int
   priority: Priority
   date: String

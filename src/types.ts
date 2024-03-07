@@ -145,7 +145,7 @@ export type CreateTaskInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   ownerId?: InputMaybe<Scalars['Int']['input']>;
   priority?: InputMaybe<Priority>;
-  state?: InputMaybe<Scalars['Int']['input']>;
+  stateId?: InputMaybe<Scalars['Int']['input']>;
   title: Scalars['String']['input'];
 };
 
@@ -159,7 +159,7 @@ export type UpdateTaskInput = {
   id: Scalars['Int']['input'];
   ownerId?: InputMaybe<Scalars['Int']['input']>;
   priority?: InputMaybe<Priority>;
-  state?: InputMaybe<Scalars['Int']['input']>;
+  stateId?: InputMaybe<Scalars['Int']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
