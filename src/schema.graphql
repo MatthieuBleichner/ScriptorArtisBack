@@ -1,8 +1,10 @@
 input TaskFilters {
-  state: Int
   priority: String
   date: String
   ownerId: Int
+  stateId: Int
+  description: String
+  title: String
 }
 
 input TasksInput {
@@ -29,6 +31,8 @@ type Query {
   states: [State!]
   "List of tasks associated to a state"
   tasksByState(filters: TaskFiltersByState): [Task]
+  "List of all users of this project"
+  users: [User!]
 }
 
 type Mutation {
@@ -38,7 +42,6 @@ type Mutation {
   updateTask(input: updateTaskInput): Task!
   "Delete a task"
   deleteTask(input: deleteTaskInput): Task!
-
 }
 
 "Define the status of a story to be done Todo, In Progress, Done"

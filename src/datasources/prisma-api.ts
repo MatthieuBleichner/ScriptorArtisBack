@@ -67,6 +67,7 @@ export class PrismaAPI extends PrismaClient {
   }
 
   async getSate(stateId: number): Promise<State> {
+    if (!stateId) return null
     return this.state.findUnique({
       where: { id: stateId || undefined },
     })
@@ -91,5 +92,9 @@ export class PrismaAPI extends PrismaClient {
     return this.user.findUnique({
       where: { id: userId || undefined },
     })
+  }
+
+  async getUsers(): Promise<User[]> {
+    return this.user.findMany();
   }
 }

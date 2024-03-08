@@ -61,6 +61,8 @@ export type Query = {
   task?: Maybe<Task>;
   /** List of tasks associated to a state */
   tasksByState?: Maybe<Array<Maybe<Task>>>;
+  /** List of all users of this project */
+  users?: Maybe<Array<User>>;
 };
 
 
@@ -110,9 +112,11 @@ export type Task = {
 
 export type TaskFilters = {
   date?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   ownerId?: InputMaybe<Scalars['Int']['input']>;
   priority?: InputMaybe<Scalars['String']['input']>;
-  state?: InputMaybe<Scalars['Int']['input']>;
+  stateId?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TaskFiltersByState = {
@@ -280,6 +284,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   states?: Resolver<Maybe<Array<ResolversTypes['State']>>, ParentType, ContextType>;
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
   tasksByState?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, Partial<QueryTasksByStateArgs>>;
+  users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
 export type StateResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['State'] = ResolversParentTypes['State']> = {

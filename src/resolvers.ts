@@ -13,16 +13,21 @@ export const resolvers: Resolvers = {
         },
         tasksByState: (_, { filters }, { dataSources }) => {
             return dataSources.prismaAPI.getTasksByState(filters);
-        }
+        },
+        users: (_, __, { dataSources }) => {
+            return dataSources.prismaAPI.getUsers();
+        },
     },
     Task: {
         owner: (parent, _, { dataSources }) => {
           return dataSources.prismaAPI.getUser(parent.ownerId)
         },
         state: (parent, _, { dataSources }) => {
-            return dataSources.prismaAPI.getSate(parent.stateId)
+            console.log('parent', parent)
+            if (!parent) return null
+            return dataSources.prismaAPI.getSate(parent?.stateId)
         }
-      },
+    },
     Mutation: { 
         createTask: (_, { input }, { dataSources }) => {
             return dataSources.prismaAPI.createTask(input);
