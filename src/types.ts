@@ -24,6 +24,10 @@ export type Mutation = {
   createTask: Task;
   /** Delete a task */
   deleteTask: Task;
+  /** Login user */
+  login: Scalars['String']['output'];
+  /** Register a new user */
+  register?: Maybe<User>;
   /** Update a task */
   updateTask: Task;
 };
@@ -36,6 +40,16 @@ export type MutationCreateTaskArgs = {
 
 export type MutationDeleteTaskArgs = {
   input?: InputMaybe<DeleteTaskInput>;
+};
+
+
+export type MutationLoginArgs = {
+  input?: InputMaybe<LoginInput>;
+};
+
+
+export type MutationRegisterArgs = {
+  input?: InputMaybe<RegisterInput>;
 };
 
 
@@ -142,6 +156,8 @@ export type User = {
   id: Scalars['Int']['output'];
   /** The last name of the user */
   lastName: Scalars['String']['output'];
+  /** The password oof the user */
+  password: Scalars['String']['output'];
 };
 
 export type CreateTaskInput = {
@@ -155,6 +171,18 @@ export type CreateTaskInput = {
 
 export type DeleteTaskInput = {
   id: Scalars['Int']['input'];
+};
+
+export type LoginInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type RegisterInput = {
+  email: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type UpdateTaskInput = {
@@ -252,6 +280,8 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   createTaskInput: CreateTaskInput;
   deleteTaskInput: DeleteTaskInput;
+  loginInput: LoginInput;
+  registerInput: RegisterInput;
   updateTaskInput: UpdateTaskInput;
 };
 
@@ -270,12 +300,16 @@ export type ResolversParentTypes = {
   User: User;
   createTaskInput: CreateTaskInput;
   deleteTaskInput: DeleteTaskInput;
+  loginInput: LoginInput;
+  registerInput: RegisterInput;
   updateTaskInput: UpdateTaskInput;
 };
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationCreateTaskArgs>>;
   deleteTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationDeleteTaskArgs>>;
+  login?: Resolver<ResolversTypes['String'], ParentType, ContextType, Partial<MutationLoginArgs>>;
+  register?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<MutationRegisterArgs>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationUpdateTaskArgs>>;
 };
 
@@ -310,6 +344,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

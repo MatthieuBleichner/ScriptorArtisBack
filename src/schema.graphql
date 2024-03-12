@@ -42,6 +42,10 @@ type Mutation {
   updateTask(input: updateTaskInput): Task!
   "Delete a task"
   deleteTask(input: deleteTaskInput): Task!
+  "Register a new user"
+  register(input: registerInput): User
+  "Login user"
+  login(input: loginInput): String!
 }
 
 "Define the status of a story to be done Todo, In Progress, Done"
@@ -90,6 +94,8 @@ type User {
     lastName: String!
     "The email of the user"
     email: String!
+    "The password oof the user"
+    password: String!
 }
 
 input createTaskInput {
@@ -113,4 +119,16 @@ input updateTaskInput {
 
 input deleteTaskInput {
   id: Int!
+}
+
+input registerInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+input loginInput {
+  email: String!
+  password: String!
 }

@@ -1,6 +1,7 @@
 import { Task, State, User } from "../types";
 import { PrismaClient } from '@prisma/client'
-
+import bcrypt from "bcrypt"
+import jwt  from "jsonwebtoken"
 
 
 export class PrismaAPI extends PrismaClient {
@@ -86,6 +87,51 @@ export class PrismaAPI extends PrismaClient {
     });
     return response;
   }
+
+  async addUser(input : {firstName: string, lastName: string, email: string, password: string }): Promise<User> {
+    return bcrypt.hash(input.password, 10)
+    .then(hash => {
+      return this.user.create({
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          password: hash,
+        },
+      });
+    })
+    .catch(error => { 
+      console.log("cannot add new user", error )
+      return null
+    }); 
+  }
+
+
+  async login(input: {email: string, password: string}) : Promise<string> {
+    return this.user.findUnique({
+      where: { email: input.email },
+    }).then((user) => {
+      return bcrypt.compare(input.password, user.password)
+      .then(valid => {
+          if (!valid) {
+            console.log('pwd not valid')
+              return "";
+          }
+          return jwt.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        )
+      })
+      .catch(error => {
+        console.log("error in bcrypt compare", error)
+        return ""
+      });
+    }).catch(() => {
+      return ""
+    })
+  }
+
 
   async getUser(userId: number): Promise<User> {
     if (!userId) return null

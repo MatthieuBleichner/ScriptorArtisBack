@@ -4,4 +4,5 @@ export type DataSourceContext = {
   dataSources: {
     prismaAPI: PrismaAPI;
   };
+  isAuthenticated: boolean; 
 };
