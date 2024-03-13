@@ -22,13 +22,12 @@ const typeDefs = gql(
     const { url } = await startStandaloneServer(server, {
       context: async ({ req }) => {
         // Get the user token after "Bearer "
-        const token = req.headers.authorization?.split(' ')[1] || "";
+        const token = req.headers.authorization? req.headers.authorization.split(' ')[1] : "";
         let currentUser = null
-        if (token) {
+        if (token !== "" && token !== "undefined") {
           const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
           currentUser = await new PrismaAPI().getUser((<TokenInterface>decodedToken).userId)
-        }
-   
+        } 
     
         // add the user to the context
         return {
